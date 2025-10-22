@@ -10,8 +10,8 @@ services:
         restart: always
         depends_on:
             - mysql
-        ports:
-            - "80:80"
+        # ports:
+        #     - "80:80"
         networks:
             - app_net
         volumes:
