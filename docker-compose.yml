@@ -1,58 +1,57 @@
 version: '3.8'
 
 volumes:
-    uploads:
-        driver: local
-    logs:
-        driver: local
-    mysql:
-        driver: local
-
-networks:
-    app_net:
-
-services:
-    mysql:
-        image: mariadb:10.5
-        container_name: mysql
-        restart: always
-        expose:
-          - "3306"
-        networks:
-          - app_net
-        volumes_from:
-          - sqlscript
-        volumes:
-          - mysql:/var/lib/mysql:rw
-        environment:
-          - MYSQL_ROOT_PASSWORD=pointofsale
-          - MYSQL_DATABASE=ospos
-          - MYSQL_USER=admin
-          - MYSQL_PASSWORD=pointofsale
-    sqlscript:
-        image: jekkos/opensourcepos:sql-master
-        command: /bin/sh -c 'exit 0'
-    ospos:
-        image: jekkos/opensourcepos:master
-        restart: always
-        depends_on:
-            - mysql
-        # ports:
-        #     - "80:80"
-        networks:
-            - app_net
-        volumes:
-            - uploads:/app/public/uploads
-            - logs:/app/writable/logs
-        environment:
-            - CI_ENVIRONMENT=production
-            - FORCE_HTTPS=false
-            - PHP_TIMEZONE=UTC
-            - MYSQL_USERNAME=admin
-            - MYSQL_PASSWORD=pointofsale
-            - MYSQL_DB_NAME=ospos
-            - MYSQL_HOST_NAME=mysql
+  uploads:
+    driver: local
+  logs:
+    driver: local
+  mysql:
+    driver: local
 
 networks:
   app_net:
     external: true
+
+services:
+  mysql:
+    image: mariadb:10.5
+    container_name: mysql
+    restart: always
+    expose:
+      - "3306"
+    networks:
+      - app_net
+    volumes_from:
+      - sqlscript
+    volumes:
+      - mysql:/var/lib/mysql:rw
+    environment:
+      - MYSQL_ROOT_PASSWORD=pointofsale
+      - MYSQL_DATABASE=ospos
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=pointofsale
+
+  sqlscript:
+    image: jekkos/opensourcepos:sql-master
+    command: /bin/sh -c 'exit 0'
+
+  ospos:
+    image: jekkos/opensourcepos:master
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+    networks:
+      - app_net
+    volumes:
+      - uploads:/app/public/uploads
+      - logs:/app/writable/logs
+    environment:
+      - CI_ENVIRONMENT=production
+      - FORCE_HTTPS=false
+      - PHP_TIMEZONE=UTC
+      - MYSQL_USERNAME=admin
+      - MYSQL_PASSWORD=pointofsale
+      - MYSQL_DB_NAME=ospos
+      - MYSQL_HOST_NAME=mysql
