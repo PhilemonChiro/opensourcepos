@@ -1,8 +1,5 @@
 include:
     - docker/docker-mysql.yml
-
-networks:
-    app_net:
     
 services:
     sqlscript:
@@ -28,3 +25,7 @@ services:
             - MYSQL_PASSWORD=pointofsale
             - MYSQL_DB_NAME=ospos
             - MYSQL_HOST_NAME=mysql
+
+networks:
+  app_net:
+    external: true
