@@ -1,6 +1,9 @@
 include:
     - docker/docker-mysql.yml
 
+networks:
+    app_net:
+    
 services:
     sqlscript:
         image: jekkos/opensourcepos:sql-master
